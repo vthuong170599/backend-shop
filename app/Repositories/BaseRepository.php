@@ -100,4 +100,7 @@ abstract class BaseRepository
         return false;
     }
 
+    public function search($fields,$keyword){
+        return $this->_model->where($fields, 'like', "%{$keyword}%")->get();
+    }
 }

@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
+use App\Repositories\ProductRepository;
 
 class ProductController extends Controller
 {
+    protected $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        return ProductResource::collection($this->productRepository->getAll());
     }
 
     /**
@@ -24,7 +32,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if ($request->hasFile('thumb')) {
+            $file = $request->thumb;
+            $name = time() . $file->getClientOriginalName();
+            $file_path = $request->file('thumb')->move('uploads/', $name);
+            $path_name = $file_path->getPathname();
+        }
+        $data = [
+            'name' => $request->name,
+            'desc' => $request->desc,
+            'price' => $request->price,
+            'discount' => $request->discount,
+            'qty' => $request->qty,
+            'cate_id' => $request->cate_id,
+            'sale_price' => $request->price - ($request->price * ($request->discount / 100)),
+            'thumb' => $path_name
+        ];
+        return $this->productRepository->create($data);
     }
 
     /**
@@ -35,7 +59,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        return new ProductResource($this->productRepository->find($id));
     }
 
     /**
@@ -47,7 +71,26 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $product = $this->show($id);
+        if ($request->hasFile('thumb') == null) {
+            $path_name = $product->thumb;
+        }else{
+            $file = $request->thumb;
+            $name = time() . $file->getClientOriginalName();
+            $file_path = $request->file('thumb')->move('uploads/', $name);
+            $path_name = $file_path->getPathname();
+        }
+        $data = [
+            'name' => $request->name,
+            'desc' => $request->desc,
+            'price' => $request->price,
+            'discount' => $request->discount,
+            'qty' => $request->qty,
+            'cate_id' => $request->cate_id,
+            'sale_price' => $request->price - ($request->price * ($request->discount / 100)),
+            'thumb' => $path_name
+        ];
+        return $this->productRepository->update($id, $data);
     }
 
     /**
@@ -58,6 +101,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->productRepository->delete($id);
+    }
+
+    public function search(Request $request)
+    {
+        return ProductResource::collection($this->productRepository->search('name', $request->name));
     }
 }

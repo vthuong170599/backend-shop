@@ -19,6 +19,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('user',[AuthController::class,'user']);
     Route::get('logout',[AuthController::class,'logout']);
     Route::resource('category', 'CategoryController');
+    Route::resource('product', 'ProductController');
+    Route::get('search_product','ProductController@search');
+    Route::resource('order', 'OrderController');
+    Route::resource('order_detail', 'OrderDetailController');
 });
 
 Route::prefix('auth')->group(function () {
