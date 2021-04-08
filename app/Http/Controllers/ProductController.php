@@ -104,6 +104,11 @@ class ProductController extends Controller
         return $this->productRepository->delete($id);
     }
 
+    /**
+     * search product
+     * @param  \Illuminate\Http\Request  $request
+     * @return App\Resource\ProductReource
+     */
     public function search(Request $request)
     {
         return ProductResource::collection($this->productRepository->search('name', $request->name));

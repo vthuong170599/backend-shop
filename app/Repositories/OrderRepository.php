@@ -26,6 +26,11 @@ class OrderRepository extends BaseRepository
         return $order;
     }
 
+     /**
+     * Get one
+     * @param $id
+     * @return mixed
+     */
     public function find($id){
         return $this->getModel()::with('custommer')->find($id);
     }

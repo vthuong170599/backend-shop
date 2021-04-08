@@ -15,6 +15,10 @@ class OrderDetailRepository extends BaseRepository
         return \App\Models\OrderDetail::class;
     }
 
+     /**
+     * get model
+     * @return string
+     */
     public function getAll()
     {
         return $this->getModel()::with(['product','order'])->paginate(5);
