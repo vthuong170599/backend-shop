@@ -23,4 +23,13 @@ class OrderDetailRepository extends BaseRepository
     {
         return $this->getModel()::with(['product','order'])->paginate(5);
     }
+
+    /**
+     * show by order id
+     * @param Integer id order
+     * @return Array order detail
+     */
+    public function showByOrderId($orderId){
+       return $this->getModel()::with('product')->where('order_id',$orderId)->get();
+    }
 }

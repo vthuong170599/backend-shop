@@ -69,4 +69,13 @@ class OrderDetailController extends Controller
     {
         //
     }
+    
+    /**
+     * show by order id
+     * @param Integer id order
+     * @return Array order detail
+     */
+    public function showByOrderId($order_id){
+        return $this->orderDetailRepository->showByOrderId($order_id);
+    }
 }

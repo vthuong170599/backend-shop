@@ -18,11 +18,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->group(function () {
     Route::get('user',[AuthController::class,'user']);
     Route::get('logout',[AuthController::class,'logout']);
+    Route::post('product/{product}', 'ProductController@updateProduct');
     Route::resource('category', 'CategoryController');
     Route::resource('product', 'ProductController');
     Route::get('search_product','ProductController@search');
     Route::resource('order', 'OrderController');
     Route::resource('order_detail', 'OrderDetailController');
+    Route::get('show_by_order/{id}','OrderDetailController@showByOrderId');
 });
 
 Route::prefix('auth')->group(function () {

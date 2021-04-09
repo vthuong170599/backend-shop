@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Repositories\ProductRepository;
 
@@ -46,7 +47,7 @@ class ProductController extends Controller
             'qty' => $request->qty,
             'cate_id' => $request->cate_id,
             'sale_price' => $request->price - ($request->price * ($request->discount / 100)),
-            'thumb' => $path_name
+            'thumb' => $path_name ?? ''
         ];
         return $this->productRepository->create($data);
     }
@@ -69,17 +70,8 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function updateProduct(Product $product, Request $request)
     {
-        $product = $this->show($id);
-        if ($request->hasFile('thumb') == null) {
-            $path_name = $product->thumb;
-        }else{
-            $file = $request->thumb;
-            $name = time() . $file->getClientOriginalName();
-            $file_path = $request->file('thumb')->move('uploads/', $name);
-            $path_name = $file_path->getPathname();
-        }
         $data = [
             'name' => $request->name,
             'desc' => $request->desc,
@@ -88,9 +80,17 @@ class ProductController extends Controller
             'qty' => $request->qty,
             'cate_id' => $request->cate_id,
             'sale_price' => $request->price - ($request->price * ($request->discount / 100)),
-            'thumb' => $path_name
         ];
-        return $this->productRepository->update($id, $data);
+        if ($request->hasFile('thumb')) {
+            $file = $request->thumb;
+            $name = time() . $file->getClientOriginalName();
+            $file_path = $request->file('thumb')->move('uploads/', $name);
+            $path_name = $file_path->getPathname();
+        }else{
+            $path_name = $this->productRepository->find($product->id)->thumb;
+        }
+        $data['thumb'] = $path_name;
+        return $product->update($data);
     }
 
     /**
