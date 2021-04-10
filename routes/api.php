@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
     Route::get('user',[AuthController::class,'user']);
+    Route::put('user/change-password/{user}',[AuthController::class,'changePassword']);
     Route::get('logout',[AuthController::class,'logout']);
     Route::post('product/{product}', 'ProductController@updateProduct');
     Route::resource('category', 'CategoryController');

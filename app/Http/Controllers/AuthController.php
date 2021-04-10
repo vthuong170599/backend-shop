@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -64,5 +65,29 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    /**
+     * change password 
+     * @param Integer id
+     * @param  \Illuminate\Http\Request  $request
+     */
+    public function changePassword(User $user, Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string',
+            'newPassword' => 'required|string',
+            'confirmPassword' => 'required|string',
+        ]);
+        if (Hash::check($request->password, $user->password)) {
+            if ($request->newPassword == $request->confirmPassword) {
+                $user->find($user->id)->update(['password' => Hash::make($request->password)]);
+                return response()->json(['message' => 'change password successfully'], 200);
+            } else {
+                return response()->json(['message' => 'confirm password invalid'], 402);
+            }
+        } else {
+            return response()->json(['message' => 'incorrect password'], 402);
+        }
     }
 }
