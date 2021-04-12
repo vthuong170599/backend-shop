@@ -20,7 +20,7 @@ class ProductRepository extends BaseRepository
      * @return string
      */
     public function getAll(){
-        $product = $this->getModel()::with('category')->paginate(5);
+        $product = $this->getModel()::with('category')->paginate(10);
         return $product;
     }
 
@@ -39,7 +39,16 @@ class ProductRepository extends BaseRepository
      * @param String fileds keyword
      * @return Array 
      */
-    public function search($fields,$keyword){
-        return $this->getModel()::where($fields, 'like', "%{$keyword}%")->with('category')->get();
+    public function search($field,$keyword){
+        return $this->getModel()::where($field, 'like', "%{$keyword}%")->with('category')->get();
+    }
+
+    /**
+     * get product by category
+     * @param int $id
+     * @return Array 
+     */
+    public function getProductByCategory($id){
+        return $this->getModel()::where('cate_id',$id)->get();
     }
 }

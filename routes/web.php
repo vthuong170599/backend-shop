@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustommerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+
+Route::resource('category', 'CategoryController');
+Route::resource('product', 'ProductController');
+Route::get('search_product','ProductController@search');
+Route::get('product_by_category/{id}','ProductController@getProductByCategory');

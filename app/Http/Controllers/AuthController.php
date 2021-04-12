@@ -40,14 +40,19 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string'
         ]);
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
-        $user->save();
+        if($request->password != $request->confirmPassword){
+            return response()->json(['message'=>'confirm password invalid'],402);
+        }else{
+            $data = [
+                'name'=>$request->name,
+                'email'=>$request->email,
+                'password'=>bcrypt($request->password)
+            ];
+            $user = User::Create($data);
+            return response()->json(['message'=>'register successfully'],200);
+        }
         return response()->json([
             'message' => 'Successfully created user!'
         ], 201);

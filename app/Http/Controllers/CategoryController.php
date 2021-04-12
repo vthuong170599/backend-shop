@@ -69,4 +69,8 @@ class CategoryController extends Controller
     {
         return $this->category->delete($id);
     }
+
+    public function search(Request $request){
+        return $this->category->search('name',$request->name);
+    }
 }

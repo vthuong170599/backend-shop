@@ -21,6 +21,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('logout',[AuthController::class,'logout']);
     Route::post('product/{product}', 'ProductController@updateProduct');
     Route::resource('category', 'CategoryController');
+    Route::get('categories','CategoryController@search');
     Route::resource('product', 'ProductController');
     Route::get('search_product','ProductController@search');
     Route::resource('order', 'OrderController');
@@ -32,3 +33,5 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('signup', [AuthController::class, 'signup']);
 });
+
+include('webApi.php');

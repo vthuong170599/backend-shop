@@ -106,11 +106,20 @@ class ProductController extends Controller
 
     /**
      * search product
-     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return App\Resource\ProductReource
      */
     public function search(Request $request)
     {
         return ProductResource::collection($this->productRepository->search('name', $request->name));
+    }
+
+     /**
+     * get product by category
+     * @param  \Illuminate\Http\Request  $request
+     * @return App\Resource\ProductReource
+     */
+    public function getProductByCategory($id){
+        return ProductResource::collection($this->productRepository->getProductByCategory($id));
     }
 }

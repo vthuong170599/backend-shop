@@ -105,7 +105,7 @@ abstract class BaseRepository
      * @param String fileds keyword
      * @return Array 
      */
-    public function search($fields,$keyword){
-        return $this->_model->where($fields, 'like', "%{$keyword}%")->get();
+    public function search($field,$keyword){
+        return $this->_model->where($field, 'like', "%{$keyword}%")->get();
     }
 }
